@@ -27,5 +27,8 @@ export class Gp {
     @Column({ nullable: true, type: 'timestamptz' })
     gpstime: Date;
 
+    @Column({ nullable: true})
+    device: string;
+
     
 }

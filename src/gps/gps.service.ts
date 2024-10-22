@@ -19,10 +19,10 @@ export class GpsService {
     this.client = mqtt.connect('mqtt://127.0.0.1:1883'); // Replace with your MQTT broker URL
 
     this.client.on('connect', () => {
-      this.logger.log('Connected to MQTT broker');
+      // this.logger.log('Connected to MQTT broker');
       this.client.subscribe('gps/1', (err) => {
         if (!err) {
-          this.logger.log('Subscribed to gps/1 topic');
+          // this.logger.log('Subscribed to gps/1 topic');
         } else {
           this.logger.error('Subscription error:', err);
         }
@@ -46,6 +46,7 @@ export class GpsService {
       long: gpsdata.long,
       speed: gpsdata.speed,
       gpstime: gpsdata.gpstime,
+      device: gpsdata.device,
     });
 console.log(data);
 

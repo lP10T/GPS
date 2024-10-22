@@ -7,4 +7,6 @@ export class CreateGpDto {
     readonly speed: number;
 
     readonly gpstime: Date;
+
+    readonly device: string;
 }
