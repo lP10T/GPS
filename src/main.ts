@@ -25,7 +25,7 @@ async function bootstrap() {
   };
   SwaggerModule.setup('swagger', app, document, options);
 
-  await app.listen(3000, '0.0.0.0');
+  await app.listen(3007, '0.0.0.0');
 
   const logger = new Logger('bootstrap');
   logger.log(`Listening on ${await app.getUrl()}/swagger`);

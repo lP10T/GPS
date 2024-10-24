@@ -6,8 +6,11 @@ import { Gp } from './entities/gp.entity';
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { DateTime } from 'luxon';
+import { InjectQueue, OnQueueActive, Process, Processor } from '@nestjs/bull';
+import { Queue } from 'bull';
 
 @Injectable()
+@Processor('gps')
 export class GpsService {
   private client: mqtt.MqttClient;
   private readonly logger = new Logger(GpsService.name);
@@ -15,14 +18,15 @@ export class GpsService {
   constructor(
     @InjectRepository(Gp)
     private readonly gpRepository: Repository<Gp>,
+    @InjectQueue('gps') private readonly gpsQueue: Queue,
   ) {
     this.client = mqtt.connect('mqtt://127.0.0.1:1883'); // Replace with your MQTT broker URL
 
     this.client.on('connect', () => {
-      // this.logger.log('Connected to MQTT broker');
+      this.logger.log('Connected to MQTT broker');
       this.client.subscribe('gps/1', (err) => {
         if (!err) {
-          // this.logger.log('Subscribed to gps/1 topic');
+          this.logger.log('Subscribed to gps/1 topic');
         } else {
           this.logger.error('Subscription error:', err);
         }
@@ -32,26 +36,38 @@ export class GpsService {
     this.client.on('message', async (topic, message) => {
       try {
         const gpsdata = JSON.parse(message.toString());
-        // this.logger.log(`${topic}:`, gpsdata);
-        await this.create(gpsdata); // Save GPS data to the database
+        this.logger.log(`Received message on ${topic}:`, gpsdata);
+        await this.addJobToQueue(gpsdata);
       } catch (error) {
         this.logger.error('Error parsing message:', error);
       }
     });
   }
 
-  create(gpsdata: CreateGpDto) {
-    const data = this.gpRepository.create({
-      lat: gpsdata.lat,
-      long: gpsdata.long,
-      speed: gpsdata.speed,
-      gpstime: gpsdata.gpstime,
-      device: gpsdata.device,
-    });
-console.log(data);
+  @Process({ name: 'processGpsData', concurrency: 1 })
+  async handleGpsData(job: { data: CreateGpDto }) {
+    // console.log('Job received:', job);
 
-    this.gpRepository.save(data);
-    return data;
+    const gpsData = job.data;
+    try {
+      // Process the GPS data and save it to the database
+      const data = this.gpRepository.create({
+        lat: gpsData.lat,
+        long: gpsData.long,
+        speed: gpsData.speed,
+        gpstime: gpsData.gpstime,
+        device: gpsData.device,
+      });
+      await this.gpRepository.save(data);
+      console.log('Data saved:', data);
+
+    } catch (error) {
+      console.error('Error saving data:', error);
+    }
+  }
+
+  async addJobToQueue(createGpDto: CreateGpDto) {
+    return this.gpsQueue.add('processGpsData', createGpDto);
   }
 
   async findAll(){
@@ -70,4 +86,5 @@ console.log(data);
   async remove(id: number){
     await this.gpRepository.delete(id);
   }
+
 }

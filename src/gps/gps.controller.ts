@@ -8,8 +8,10 @@ export class GpsController {
   constructor(private readonly gpsService: GpsService) {}
 
   @Post()
-  create(@Body() createGpDto: CreateGpDto) {
-    return this.gpsService.create(createGpDto);
+  async create(@Body() createGpDto: CreateGpDto) {
+    // Add the job to the queue
+    const job = await this.gpsService.addJobToQueue(createGpDto);
+    return { jobId: job.id };
   }
 
   @Get()
