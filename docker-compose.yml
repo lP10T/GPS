@@ -12,9 +12,12 @@ services:
       - DATABASE_USER=postgres
       - DATABASE_PASSWORD=postgres
       - DATABASE_NAME=GPS-DATA
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
     depends_on:
       - postgres
       - mosquitto
+      - redis
 
   postgres:
     image: postgres:13
@@ -39,8 +42,16 @@ services:
       - mosquitto_log:/mosquitto/log
       - ./mosquitto.conf:/mosquitto/config/mosquitto.conf
 
+  redis:
+    image: redis:alpine
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+
 volumes:
   postgres_data:
   mosquitto_data:
   mosquitto_config:
   mosquitto_log:
+  redis_data:

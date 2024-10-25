@@ -5,6 +5,11 @@ import { GpsModule } from './gps/gps.module';
 import { Gp } from './gps/entities/gp.entity';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { BullModule } from '@nestjs/bull';
+import { AuthModule } from './auth/auth.module';
+import { UserModule } from './user/user.module';
+import { AuditlogModule } from './auditlog/auditlog.module';
+import { PermissionModule } from './permission/permission.module';
+import { RoleModule } from './role/role.module';
 
 @Module({
   imports: [
@@ -24,7 +29,7 @@ import { BullModule } from '@nestjs/bull';
         port: 6379,
       },
     }),
-    GpsModule, // GPS module with MQTT client and Bull queue integration
+    GpsModule,AuthModule,UserModule,AuditlogModule,PermissionModule,RoleModule // GPS module with MQTT client and Bull queue integration
   ],
   controllers: [AppController],
   providers: [AppService],
