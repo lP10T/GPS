@@ -2,7 +2,6 @@ import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { GpsModule } from './gps/gps.module';
-import { Gp } from './gps/entities/gp.entity';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { BullModule } from '@nestjs/bull';
 import { AuthModule } from './auth/auth.module';
@@ -11,24 +10,15 @@ import { AuditlogModule } from './auditlog/auditlog.module';
 import { PermissionModule } from './permission/permission.module';
 import { RoleModule } from './role/role.module';
 import { ConfigModule } from '@nestjs/config';
-import { Device } from './device/entities/device.entity';
 import { DeviceModule } from './device/device.module';
+import { databaseConfig } from './database.config';
 
 @Module({
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
     }),
-    TypeOrmModule.forRoot({
-      type: 'mysql',
-      host: '203.146.252.145',
-      port: 3306,
-      username: 'devashac_gps',
-      password: 'm4u9Is4!8',
-      database: 'devashac_gps_demo',
-      entities: [],
-      // synchronize: true,
-    }),
+    TypeOrmModule.forRoot(databaseConfig),
     BullModule.forRoot({
       redis: {
         host: 'redis',
@@ -42,7 +32,6 @@ import { DeviceModule } from './device/device.module';
     PermissionModule,
     RoleModule,
     DeviceModule,
-    
   ],
   controllers: [AppController],
   providers: [AppService],
