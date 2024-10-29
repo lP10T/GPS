@@ -7,11 +7,11 @@ services:
       - .:/usr/src/app
       - /usr/src/app/node_modules
     environment:
-      - DATABASE_HOST=postgres
+      - DATABASE_HOST=127.0.0.1
       - DATABASE_PORT=5432
       - DATABASE_USER=postgres
-      - DATABASE_PASSWORD=postgres
-      - DATABASE_NAME=GPS-DATA
+      - DATABASE_PASSWORD=i@Passw0rd
+      - DATABASE_NAME=gps
       - REDIS_HOST=redis
       - REDIS_PORT=6379
     depends_on:
@@ -25,8 +25,8 @@ services:
       - "5432:5432"
     environment:
       - DATABASE_USER=postgres
-      - DATABASE_PASSWORD=postgres
-      - DATABASE_NAME=GPS-DATA
+      - DATABASE_PASSWORD=i@Passw0rd
+      - DATABASE_NAME=gps
       - PGTZ=Asia/Bangkok
     volumes:
       - postgres_data:/var/lib/postgresql/data

@@ -15,11 +15,11 @@ import { RoleModule } from './role/role.module';
   imports: [
     TypeOrmModule.forRoot({
       type: 'postgres',
-      host: 'localhost',
+      host: '127.0.0.1',
       port: 5432,
       username: 'postgres',
-      password: 'postgres',
-      database: 'postgres',
+      password: 'i@Passw0rd',
+      database: 'gps',
       entities: [Gp],
       synchronize: true,
     }),
