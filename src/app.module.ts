@@ -26,7 +26,7 @@ import { RoleModule } from './role/role.module';
     BullModule.forRoot({
       redis: {
         host: '127.0.0.1',
-        port: 6379,
+        port: 6380,
       },
     }),
     GpsModule,AuthModule,UserModule,AuditlogModule,PermissionModule,RoleModule // GPS module with MQTT client and Bull queue integration
