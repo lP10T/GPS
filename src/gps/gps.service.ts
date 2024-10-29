@@ -36,7 +36,7 @@ export class GpsService {
     this.client.on('message', async (topic, message) => {
       try {
         const gpsdata = JSON.parse(message.toString());
-        this.logger.log(`Received message on ${topic}:`, gpsdata);
+        // this.logger.log(`Received message on ${topic}:`, gpsdata);
         await this.addJobToQueue(gpsdata);
       } catch (error) {
         this.logger.error('Error parsing message:', error);
@@ -59,7 +59,7 @@ export class GpsService {
         device: gpsData.device,
       });
       await this.gpRepository.save(data);
-      console.log('Data saved:', data);
+      // console.log('Data saved:', data);
 
     } catch (error) {
       console.error('Error saving data:', error);

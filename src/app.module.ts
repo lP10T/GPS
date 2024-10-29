@@ -11,6 +11,8 @@ import { AuditlogModule } from './auditlog/auditlog.module';
 import { PermissionModule } from './permission/permission.module';
 import { RoleModule } from './role/role.module';
 import { ConfigModule } from '@nestjs/config';
+import { Device } from './device/entities/device.entity';
+import { DeviceModule } from './device/device.module';
 
 @Module({
   imports: [
@@ -18,19 +20,19 @@ import { ConfigModule } from '@nestjs/config';
       isGlobal: true,
     }),
     TypeOrmModule.forRoot({
-      type: 'postgres',
-      host: process.env.DATABASE_HOST,
-      port: parseInt(process.env.DATABASE_PORT, 10),
-      username: process.env.DATABASE_USER,
-      password: process.env.DATABASE_PASSWORD,
-      database: process.env.DATABASE_NAME,
-      entities: [Gp],
-      synchronize: true,
+      type: 'mysql',
+      host: '203.146.252.145',
+      port: 3306,
+      username: 'devashac_gps',
+      password: 'm4u9Is4!8',
+      database: 'devashac_gps_demo',
+      entities: [],
+      // synchronize: true,
     }),
     BullModule.forRoot({
       redis: {
-        host: process.env.REDIS_HOST,
-        port: parseInt(process.env.REDIS_PORT, 10),
+        host: 'redis',
+        port: 6379,
       },
     }),
     GpsModule,
@@ -39,6 +41,8 @@ import { ConfigModule } from '@nestjs/config';
     AuditlogModule,
     PermissionModule,
     RoleModule,
+    DeviceModule,
+    
   ],
   controllers: [AppController],
   providers: [AppService],
