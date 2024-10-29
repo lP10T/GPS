@@ -13,7 +13,7 @@ export class Gp extends CustomBaseEntity {
     @Column({nullable: true,type: 'float'})
     speed: number;
 
-    @Column({ nullable: true, type: 'timestamptz' })
+    @Column({ nullable: true, type: 'timestamp' })
     gpstime: Date;
 
     @Column({ nullable: true})
