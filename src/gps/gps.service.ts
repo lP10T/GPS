@@ -20,7 +20,7 @@ export class GpsService {
     private readonly gpRepository: Repository<Gp>,
     @InjectQueue('gps') private readonly gpsQueue: Queue,
   ) {
-    this.client = mqtt.connect('mqtt://127.0.0.1:1883'); // Replace with your MQTT broker URL
+    this.client = mqtt.connect('mqtt://185.78.166.46'); // Replace with your MQTT broker URL
 
     this.client.on('connect', () => {
       // this.logger.log('Connected to MQTT broker');
