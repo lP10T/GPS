@@ -6,28 +6,23 @@ services:
     volumes:
       - .:/usr/src/app
       - /usr/src/app/node_modules
-    environment:
-      - DATABASE_HOST=127.0.0.1
-      - DATABASE_PORT=5432
-      - DATABASE_USER=postgres
-      - DATABASE_PASSWORD=i@Passw0rd
-      - DATABASE_NAME=gps
-      - REDIS_HOST=redis
-      - REDIS_PORT=6379
+    env_file:
+      - .env
     depends_on:
       - postgres
       - mosquitto
       - redis
-
+    restart: unless-stopped
+    
   postgres:
     image: postgres:13
     ports:
       - "5432:5432"
     environment:
-      - DATABASE_USER=postgres
-      - DATABASE_PASSWORD=i@Passw0rd
-      - DATABASE_NAME=gps
-      - PGTZ=Asia/Bangkok
+      - POSTGRES_USER=${DATABASE_USER}
+      - POSTGRES_PASSWORD=${DATABASE_PASSWORD}
+      - POSTGRES_DB=${DATABASE_NAME}
+      - PGTZ=${PGTZ}
     volumes:
       - postgres_data:/var/lib/postgresql/data
 

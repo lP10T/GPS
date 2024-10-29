@@ -10,26 +10,35 @@ import { UserModule } from './user/user.module';
 import { AuditlogModule } from './auditlog/auditlog.module';
 import { PermissionModule } from './permission/permission.module';
 import { RoleModule } from './role/role.module';
+import { ConfigModule } from '@nestjs/config';
 
 @Module({
   imports: [
+    ConfigModule.forRoot({
+      isGlobal: true,
+    }),
     TypeOrmModule.forRoot({
       type: 'postgres',
-      host: '127.0.0.1',
-      port: 5432,
-      username: 'postgres',
-      password: 'i@Passw0rd',
-      database: 'gps',
+      host: process.env.DATABASE_HOST,
+      port: parseInt(process.env.DATABASE_PORT, 10),
+      username: process.env.DATABASE_USER,
+      password: process.env.DATABASE_PASSWORD,
+      database: process.env.DATABASE_NAME,
       entities: [Gp],
       synchronize: true,
     }),
     BullModule.forRoot({
       redis: {
-        host: '127.0.0.1',
-        port: 6380,
+        host: process.env.REDIS_HOST,
+        port: parseInt(process.env.REDIS_PORT, 10),
       },
     }),
-    GpsModule,AuthModule,UserModule,AuditlogModule,PermissionModule,RoleModule // GPS module with MQTT client and Bull queue integration
+    GpsModule,
+    AuthModule,
+    UserModule,
+    AuditlogModule,
+    PermissionModule,
+    RoleModule,
   ],
   controllers: [AppController],
   providers: [AppService],

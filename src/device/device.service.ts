@@ -38,7 +38,7 @@ export class DeviceService {
         status: DeviceStatus.ACTIVE,
 
       },
-      re
+      
     });
     return data;
   }
