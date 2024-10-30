@@ -11,20 +11,28 @@ import { PermissionModule } from './permission/permission.module';
 import { RoleModule } from './role/role.module';
 import { ConfigModule } from '@nestjs/config';
 import { DeviceModule } from './device/device.module';
-import { databaseConfig } from './database.config';
 
 @Module({
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
     }),
-    TypeOrmModule.forRoot(databaseConfig),
-    BullModule.forRoot({
-      redis: {
-        host: 'redis',
-        port: 6379,
-      },
+    TypeOrmModule.forRoot({
+      type: 'mysql',
+      host: '203.146.252.145',
+      port: 3306,
+      username: 'devashac_gps',
+      password: 'm4u9Is4!8',
+      database: 'devashac_gps_demo',
+      entities: [__dirname + '/**/*.entity{.ts,.js}'],
+      synchronize: false,
     }),
+    // BullModule.forRoot({
+    //   redis: {
+    //     host: 'redis',
+    //     port: 6379,
+    //   },
+    // }),
     GpsModule,
     AuthModule,
     UserModule,
@@ -36,4 +44,4 @@ import { databaseConfig } from './database.config';
   controllers: [AppController],
   providers: [AppService],
 })
-export class AppModule {}
+export class AppModule { }

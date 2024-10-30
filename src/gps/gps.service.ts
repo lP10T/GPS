@@ -3,7 +3,7 @@ import { CreateGpDto } from './dto/create-gp.dto';
 import { UpdateGpDto } from './dto/update-gp.dto';
 import * as mqtt from 'mqtt';
 import { Gp } from './entities/gp.entity';
-import { Repository } from 'typeorm';
+import { DataSource, Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { DateTime } from 'luxon';
 import { InjectQueue, OnQueueActive, Process, Processor } from '@nestjs/bull';
@@ -16,6 +16,7 @@ export class GpsService {
   private readonly logger = new Logger(GpsService.name);
 
   constructor(
+    private dataSource: DataSource,
     @InjectRepository(Gp)
     private readonly gpRepository: Repository<Gp>,
     @InjectQueue('gps') private readonly gpsQueue: Queue,
@@ -51,14 +52,18 @@ export class GpsService {
     const gpsData = job.data;
     try {
       // Process the GPS data and save it to the database
-      const data = this.gpRepository.create({
-        lat: gpsData.lat,
-        long: gpsData.long,
-        speed: gpsData.speed,
-        gpstime: gpsData.gpstime,
-        device: gpsData.device,
-      });
-      await this.gpRepository.save(data);
+      // const data = this.gpRepository.create({
+      //   lat: gpsData.lat,
+      //   long: gpsData.long,
+      //   speed: gpsData.speed,
+      //   gpstime: gpsData.gpstime,
+      //   device: gpsData.device,
+      // });
+      // await this.gpRepository.save(data);
+      await this.dataSource.query(
+        `INSERT INTO locations (latitude, longitude, device_id, created_at, updated_at) VALUES (?, ?, ?, ?, ?)`,
+        [gpsData.lat, gpsData.long, 1, new Date(), new Date()] // ค่าที่ต้องการ insert
+      );
       // console.log('Data saved:', data);
 
     } catch (error) {
