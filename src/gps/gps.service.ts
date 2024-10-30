@@ -60,9 +60,12 @@ export class GpsService {
       //   device: gpsData.device,
       // });
       // await this.gpRepository.save(data);
+
+      const dateTh = DateTime.fromJSDate(gpsData.gpstime).plus({ hour: 7}).toJSDate();
+
       await this.dataSource.query(
         `INSERT INTO locations (latitude, longitude, device_id, created_at, updated_at) VALUES (?, ?, ?, ?, ?)`,
-        [gpsData.lat, gpsData.long, 1, new Date(), new Date()] // ค่าที่ต้องการ insert
+        [gpsData.lat, gpsData.long, 1, dateTh, dateTh] // ค่าที่ต้องการ insert
       );
       // console.log('Data saved:', data);
 
