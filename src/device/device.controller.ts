@@ -20,7 +20,7 @@ export class DeviceController {
 
   @Get()
   GetallDeviceAvilable(@Param('Date') Date: DateTime) {
-    Date.tolocal();
+    Date.toLocal();
     return this.deviceService.GetallDeviceAvilable(Date);
   }
 
