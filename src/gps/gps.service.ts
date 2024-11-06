@@ -52,22 +52,15 @@ export class GpsService {
     const gpsData = job.data;
     try {
       // Process the GPS data and save it to the database
-      // const data = this.gpRepository.create({
-      //   lat: gpsData.lat,
-      //   long: gpsData.long,
-      //   speed: gpsData.speed,
-      //   gpstime: gpsData.gpstime,
-      //   device: gpsData.device,
-      // });
-      // await this.gpRepository.save(data);
-
-      const dateTh = DateTime.fromJSDate(gpsData.gpstime).plus({ hour: 7}).toJSDate();
-
-      await this.dataSource.query(
-        `INSERT INTO locations (latitude, longitude, device_id, created_at, updated_at) VALUES (?, ?, ?, ?, ?)`,
-        [gpsData.lat, gpsData.long, 1, dateTh, dateTh] // ค่าที่ต้องการ insert
-      );
-      // console.log('Data saved:', data);
+      const data = this.gpRepository.create({
+        lat: gpsData.lat,
+        long: gpsData.long,
+        speed: gpsData.speed,
+        gpstime: gpsData.gpstime,
+        device: gpsData.device,
+      });
+      await this.gpRepository.save(data);
+      console.log('Data saved:', data);
 
     } catch (error) {
       console.error('Error saving data:', error);
